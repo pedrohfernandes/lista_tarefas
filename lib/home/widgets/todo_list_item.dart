@@ -14,18 +14,20 @@ class ToDoListItem extends StatelessWidget {
     return Padding(
       padding: EdgeInsets.symmetric(vertical: 4),
       child: Slidable(
-        actionPane: SlidableStrechActionPane(),
-        actionExtentRatio: 0.25,
-        secondaryActions: [
-          IconSlideAction(
-            onTap: () {
-              onDelete(toDo);
-            },
-            color: Colors.red,
-            icon: Icons.delete,
-            caption: 'Deletar',
-          ),
-        ],
+        endActionPane: ActionPane(
+          extentRatio: 0.25,
+          motion: StretchMotion(),
+          children: [
+            SlidableAction(
+              onPressed: (BuildContext context) {
+                onDelete(toDo);
+              },
+              backgroundColor: Colors.red,
+              icon: Icons.delete,
+              label: 'Deletar',
+            ),
+          ],
+        ),
         child: Container(
           padding: EdgeInsets.all(16),
           decoration: BoxDecoration(
