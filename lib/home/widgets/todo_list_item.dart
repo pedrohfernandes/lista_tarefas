@@ -12,11 +12,11 @@ class ToDoListItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: EdgeInsets.symmetric(vertical: 4),
+      padding: const EdgeInsets.symmetric(vertical: 4),
       child: Slidable(
         endActionPane: ActionPane(
           extentRatio: 0.25,
-          motion: StretchMotion(),
+          motion: const ScrollMotion(),
           children: [
             SlidableAction(
               onPressed: (BuildContext context) {
@@ -25,21 +25,24 @@ class ToDoListItem extends StatelessWidget {
               backgroundColor: Colors.red,
               icon: Icons.delete,
               label: 'Deletar',
+              borderRadius:
+                  const BorderRadius.horizontal(right: Radius.circular(8)),
             ),
           ],
         ),
         child: Container(
-          padding: EdgeInsets.all(16),
+          padding: const EdgeInsets.all(16),
           decoration: BoxDecoration(
             color: Colors.grey[300],
-            borderRadius: BorderRadius.circular(8),
+            borderRadius:
+                const BorderRadius.horizontal(left: Radius.circular(8)),
           ),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
               Text(
                 DateFormat("dd/MM/yyyy - HH:mm").format(toDo.dateTime),
-                style: TextStyle(
+                style: const TextStyle(
                   fontSize: 12,
                 ),
               ),
@@ -47,7 +50,7 @@ class ToDoListItem extends StatelessWidget {
                 padding: const EdgeInsets.only(top: 5),
                 child: Text(
                   toDo.title,
-                  style: TextStyle(
+                  style: const TextStyle(
                     fontSize: 16,
                     fontWeight: FontWeight.w600,
                   ),

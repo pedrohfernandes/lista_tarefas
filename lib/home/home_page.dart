@@ -38,101 +38,118 @@ class _HomePageState extends State<HomePage> {
       child: Scaffold(
         body: Padding(
           padding: const EdgeInsets.all(16),
-          child: Center(
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Row(
-                  crossAxisAlignment: CrossAxisAlignment.center,
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Expanded(
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Expanded(
-                      child: TextField(
-                        controller: toDoController,
-                        decoration: InputDecoration(
-                          border: OutlineInputBorder(),
-                          labelText: "Adicione uma tarefa",
-                          hintText: "Ex.: Estudar Flutter",
-                          errorText: errorText,
-                        ),
-                      ),
+                    const Text(
+                      "Lista de Tarefas",
+                      style: TextStyle(
+                          fontSize: 24,
+                          fontWeight: FontWeight.w500,
+                          color: Colors.black87),
                     ),
-                    SizedBox(width: 10),
-                    ElevatedButton(
-                      onPressed: () {
-                        String text = toDoController.text;
-                        if (text.isEmpty) {
-                          setState(() {
-                            errorText = "O título não pode ser vazio!";
-                          });
-                          return;
-                        }
-                        setState(() {
-                          ToDo newToDo = ToDo(
-                            title: text,
-                            dateTime: DateTime.now(),
-                          );
-                          toDos.add(newToDo);
-                          errorText = null;
-                        });
-                        toDoController.clear();
-                        toDoRepository.saveToDoList(toDos);
-                      },
-                      style: ElevatedButton.styleFrom(
-                        padding: EdgeInsets.all(14),
-                      ),
-                      child: Icon(
-                        Icons.add,
-                        size: 30,
+                    const SizedBox(
+                      height: 24,
+                    ),
+                    Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Expanded(
+                          child: TextField(
+                            controller: toDoController,
+                            decoration: InputDecoration(
+                              border: const OutlineInputBorder(),
+                              labelText: "Adicione uma tarefa",
+                              hintText: "Ex.: Estudar Flutter",
+                              errorText: errorText,
+                            ),
+                          ),
+                        ),
+                        const SizedBox(width: 10),
+                        ElevatedButton(
+                          onPressed: () {
+                            String text = toDoController.text;
+                            if (text.isEmpty) {
+                              setState(() {
+                                errorText = "O título não pode ser vazio!";
+                              });
+                              return;
+                            }
+                            setState(() {
+                              ToDo newToDo = ToDo(
+                                title: text,
+                                dateTime: DateTime.now(),
+                              );
+                              toDos.add(newToDo);
+                              errorText = null;
+                            });
+                            toDoController.clear();
+                            toDoRepository.saveToDoList(toDos);
+                          },
+                          style: ElevatedButton.styleFrom(
+                            padding: const EdgeInsets.all(14),
+                          ),
+                          child: const Icon(
+                            Icons.add,
+                            size: 30,
+                          ),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(
+                      height: 16,
+                    ),
+                    Flexible(
+                      child: ListView(
+                        shrinkWrap: true,
+                        children: [
+                          for (ToDo toDo in toDos)
+                            ToDoListItem(
+                              toDo: toDo,
+                              onDelete: onDelete,
+                            ),
+                        ],
                       ),
                     ),
                   ],
                 ),
-                SizedBox(
-                  height: 16,
-                ),
-                Flexible(
-                  child: ListView(
-                    shrinkWrap: true,
-                    children: [
-                      for (ToDo toDo in toDos)
-                        ToDoListItem(
-                          toDo: toDo,
-                          onDelete: onDelete,
-                        ),
-                    ],
+              ),
+              const SizedBox(
+                height: 16,
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Expanded(
+                    child: Text(
+                      toDos.isEmpty
+                          ? "Você não possui tarefas pendentes"
+                          : toDos.length == 1
+                              ? "Você possui ${toDos.length} tarefa pendente"
+                              : "Você possui ${toDos.length} tarefas pendentes",
+                    ),
                   ),
-                ),
-                SizedBox(
-                  height: 16,
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Expanded(
-                      child: Text(
-                        toDos.isEmpty
-                            ? "Você não possui tarefas pendentes"
-                            : toDos.length == 1
-                                ? "Você possui ${toDos.length} tarefa pendente"
-                                : "Você possui ${toDos.length} tarefas pendentes",
-                      ),
+                  const SizedBox(
+                    width: 8,
+                  ),
+                  ElevatedButton(
+                    onPressed: showDeleteToDosConfirmationDialog,
+                    style: ElevatedButton.styleFrom(
+                      padding: const EdgeInsets.all(14),
                     ),
-                    SizedBox(
-                      width: 8,
+                    child: const Text(
+                      "Limpar tudo",
                     ),
-                    ElevatedButton(
-                      onPressed: showDeleteToDosConfirmationDialog,
-                      style: ElevatedButton.styleFrom(
-                        padding: EdgeInsets.all(14),
-                      ),
-                      child: Text(
-                        "Limpar tudo",
-                      ),
-                    ),
-                  ],
-                )
-              ],
-            ),
+                  ),
+                ],
+              ),
+            ],
           ),
         ),
       ),
@@ -153,11 +170,11 @@ class _HomePageState extends State<HomePage> {
       SnackBar(
         content: Text(
           "Tarefa ${toDo.title} foi removida com sucesso!",
-          style: TextStyle(
+          style: const TextStyle(
             color: Colors.black,
           ),
         ),
-        backgroundColor: Colors.white,
+        backgroundColor: Colors.grey[100],
         action: SnackBarAction(
           label: "Desfazer",
           onPressed: () {
@@ -167,7 +184,7 @@ class _HomePageState extends State<HomePage> {
             toDoRepository.saveToDoList(toDos);
           },
         ),
-        duration: Duration(seconds: 4),
+        duration: const Duration(seconds: 4),
       ),
     );
   }
@@ -176,14 +193,15 @@ class _HomePageState extends State<HomePage> {
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
-        title: Text("Limpar tudo?"),
-        content: Text("Você tem certeza que deseja limpar todas as tarefas?"),
+        title: const Text("Limpar tudo?"),
+        content:
+            const Text("Você tem certeza que deseja limpar todas as tarefas?"),
         actions: [
           TextButton(
             onPressed: () {
               Navigator.of(context).pop();
             },
-            child: Text("Cancelar"),
+            child: const Text("Cancelar"),
           ),
           TextButton(
             onPressed: () {
@@ -191,7 +209,7 @@ class _HomePageState extends State<HomePage> {
               deleteAllToDos();
             },
             style: TextButton.styleFrom(foregroundColor: Colors.red),
-            child: Text("Limpar tudo"),
+            child: const Text("Limpar tudo"),
           ),
         ],
       ),
